@@ -3,12 +3,40 @@ import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
+import LibraryPage from './pages/sample/LibraryPage';
+import ButtonPage from './pages/material/ButtonPage';
+import CommentPage from './pages/sample/CommentPage';
+import CapacityPage from './pages/reactive/CapacityPage';
+
+// const root = ReactDOM.createRoot(document.getElementById('root'));
+// root.render(
+//   <React.StrictMode>
+//     <App />
+//   </React.StrictMode>
+// );
+
+// const root = ReactDOM.createRoot(document.getElementById('root'));
+
+// root.render(
+//     <LibraryPage />
+// );
+
+// const root = ReactDOM.createRoot(document.getElementById('root'));
+
+// root.render(
+//     <ButtonPage/>
+// );
+
+// const root = ReactDOM.createRoot(document.getElementById('root'));
+
+// root.render(
+//     <CommentPage/>
+// );
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
+
 root.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>
+    <CapacityPage/>
 );
 
 // If you want to start measuring performance in your app, pass a function
