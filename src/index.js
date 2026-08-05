@@ -9,6 +9,7 @@ import CommentPage from './pages/sample/CommentPage';
 import CapacityPage from './pages/reactive/CapacityPage';
 import EventPage from './pages/event/EventPage';
 import TestRouterApp from './TestRouterApp';
+import RenderingPage from './pages/rendering/RenderingPage';
 
 // const root = ReactDOM.createRoot(document.getElementById('root'));
 // root.render(
@@ -49,11 +50,18 @@ import TestRouterApp from './TestRouterApp';
 // );
 
 //router
+// const root = ReactDOM.createRoot(document.getElementById('root'));
+
+// root.render(
+//     <TestRouterApp/>
+// );
+
 const root = ReactDOM.createRoot(document.getElementById('root'));
 
 root.render(
-    <TestRouterApp/>
+    <RenderingPage/>
 );
+
 
 
 // If you want to start measuring performance in your app, pass a function

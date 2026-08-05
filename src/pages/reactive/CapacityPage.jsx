@@ -42,7 +42,7 @@ const CapacityPage = () => {
         console.log(`debug >>>> side effect render cnt : ${cnt}`);
         setFull(cnt >= capacity);
         setEmpty(cnt <= 0);
-    });
+    }, [cnt]);
     //UI
     /*
     -입장인원 (10명)
@@ -50,6 +50,7 @@ const CapacityPage = () => {
     -입장버튼을 클릭하면 인원수가 증가되고 입장인원이 꽉차면 버튼을 비활성화
     -퇴장버튼을 클릭하면 인원수가 감소되고 인원이 0이되면 버튼을 비활성화
     -오늘은 입장 퇴장 버튼을 클릭했을때 입장 인원이랑 콘솔 로그 cnt랑 싱크 맞추기까지만
+    -위에 것까지 해결함
     */
     return (
         <div>

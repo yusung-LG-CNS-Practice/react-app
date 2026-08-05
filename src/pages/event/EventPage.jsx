@@ -42,38 +42,45 @@ const EventPage = () => {
     // transition을 위한 HOOK
     const moveUrl = useNavigate();
 
-    const signInHandler = async(e, email, pswd) => {
+    const signInHandler = async (e, email, pswd) => {
         e.preventDefault(); // => 버블링을 막는 함수
 
-        await api.get(`/users?email=${email}&pwsd=${pswd}`)
-        .then(response => {
-            console.log(`debug >>>> response : `, response);
+        await api.get(`/users?email=${email}&pswd=${pswd}`)
+            .then(response => {
+                console.log(`debug >>>> response : `, response);
 
-            // react status를 사용하지 않는 경우 아래처럼 해도 됨
-            const ary = response.data;
-            if(ary.length > 0){
-                const user = ary[0];
-                localStorage.setItem('userName', user.name);
-                moveUrl('/success');
-            }else{
-                moveUrl('/error'); // /success나 error 컴포넌트로 이동 html 아님
-            }
-            // if(response.status === 200){
-            //     // status가 200번대일때 인증된 사용자 정보 관리
-            //     // sessionStorage, localStorage
-            //     // 인증 - 신원확인, 인가 - 특정 url에 접근 할 수 있는 권한
-            //     // 인증이 되면 token이 발행 => Json Web Token(JWT) - token(header)
-            //     // response.headers.get('Authorization');
-            //     // localStorage.setItem('token', 'token-xxxxxxxxx');
-            //     // react component transition
-            // }
-            // else{
+                // react status를 사용하지 않는 경우 아래처럼 해도 됨
+                const ary = response.data;
+                if (ary.length > 0) {
+                    const user = ary[0];
+                    localStorage.setItem('userName', user.name);
+                    moveUrl('/success', {
+                        state: {
+                            user,
+                            from : '/signIn'
+                        }
+                    });
+                } else {
+                    moveUrl('/error?category=react&sort=latest');
 
-            // }
-        })
-        .catch(err => {
-            console.log(`debug >>>> error : `, err);
-        })
+                    // /success나 error 컴포넌트로 이동 html 아님
+                }
+                // if(response.status === 200){
+                //     // status가 200번대일때 인증된 사용자 정보 관리
+                //     // sessionStorage, localStorage
+                //     // 인증 - 신원확인, 인가 - 특정 url에 접근 할 수 있는 권한
+                //     // 인증이 되면 token이 발행 => Json Web Token(JWT) - token(header)
+                //     // response.headers.get('Authorization');
+                //     // localStorage.setItem('token', 'token-xxxxxxxxx');
+                //     // react component transition
+                // }
+                // else{
+
+                // }
+            })
+            .catch(err => {
+                console.log(`debug >>>> error : `, err);
+            })
 
     }
 
@@ -112,7 +119,7 @@ const EventPage = () => {
                 </label>
             </div>
             <Button variant='primary'
-                    onClick={(e) => signInHandler(e, email, pswd)}>SignIn</Button>
+                onClick={(e) => signInHandler(e, email, pswd)}>SignIn</Button>
         </div>
     );
 }
