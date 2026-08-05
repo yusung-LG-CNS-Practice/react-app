@@ -17,7 +17,8 @@
     "users":[
         {
             "email" : "yusung052077@gmail.com",
-            "pswd" : "1234"
+            "pswd" : "1234",
+            "name" : "나유성"
         }
     ]
 }

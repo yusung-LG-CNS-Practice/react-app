@@ -8,6 +8,7 @@ import ButtonPage from './pages/material/ButtonPage';
 import CommentPage from './pages/sample/CommentPage';
 import CapacityPage from './pages/reactive/CapacityPage';
 import EventPage from './pages/event/EventPage';
+import TestRouterApp from './TestRouterApp';
 
 // const root = ReactDOM.createRoot(document.getElementById('root'));
 // root.render(
@@ -40,12 +41,20 @@ import EventPage from './pages/event/EventPage';
 //     <CapacityPage/>
 // );
 
-//import EventPage from './pages/event/EventPage';
+
+// const root = ReactDOM.createRoot(document.getElementById('root'));
+
+// root.render(
+//     <EventPage/>
+// );
+
+//router
 const root = ReactDOM.createRoot(document.getElementById('root'));
 
 root.render(
-    <EventPage/>
+    <TestRouterApp/>
 );
+
 
 // If you want to start measuring performance in your app, pass a function
 // to log results (for example: reportWebVitals(console.log))

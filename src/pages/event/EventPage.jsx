@@ -1,6 +1,8 @@
 import Button from 'react-bootstrap/Button';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { useEffect, useState } from 'react';
+import api from '../../api/axios';
+import { useNavigate } from 'react-router-dom';
 
 const EventPage = () => {
     /*
@@ -37,7 +39,41 @@ const EventPage = () => {
         //console.log(`debug >>>> emailHandler email : `, pswd);
     }
 
-    const signInHandler = (e, email, pswd) => {
+    // transition을 위한 HOOK
+    const moveUrl = useNavigate();
+
+    const signInHandler = async(e, email, pswd) => {
+        e.preventDefault(); // => 버블링을 막는 함수
+
+        await api.get(`/users?email=${email}&pwsd=${pswd}`)
+        .then(response => {
+            console.log(`debug >>>> response : `, response);
+
+            // react status를 사용하지 않는 경우 아래처럼 해도 됨
+            const ary = response.data;
+            if(ary.length > 0){
+                const user = ary[0];
+                localStorage.setItem('userName', user.name);
+                moveUrl('/success');
+            }else{
+                moveUrl('/error'); // /success나 error 컴포넌트로 이동 html 아님
+            }
+            // if(response.status === 200){
+            //     // status가 200번대일때 인증된 사용자 정보 관리
+            //     // sessionStorage, localStorage
+            //     // 인증 - 신원확인, 인가 - 특정 url에 접근 할 수 있는 권한
+            //     // 인증이 되면 token이 발행 => Json Web Token(JWT) - token(header)
+            //     // response.headers.get('Authorization');
+            //     // localStorage.setItem('token', 'token-xxxxxxxxx');
+            //     // react component transition
+            // }
+            // else{
+
+            // }
+        })
+        .catch(err => {
+            console.log(`debug >>>> error : `, err);
+        })
 
     }
 
