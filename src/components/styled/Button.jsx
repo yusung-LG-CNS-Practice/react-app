@@ -9,9 +9,10 @@ const StyledButton = styled.button
     border-radius : 8px;
     cursor : pointer
 `;
-const Button = (props) => {
+const Button = ({onClick, title, disabled}) => {
     return (
-        <StyledButton onClick = {props.onClick}>{props.title}</StyledButton>
+        <StyledButton onClick = {onClick}
+                        disabled={disabled}>{title}</StyledButton>
     );
 }
 

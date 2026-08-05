@@ -1,5 +1,5 @@
 import Button from '../../components/styled/Button';
-import { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react'; //=> useState, useEffect는 hook 이라고 함
 
 const CapacityPage = () => {
 
@@ -10,7 +10,12 @@ const CapacityPage = () => {
     // 해당 변수는 양방향 실시간 소통이 이루어져야한다...어떻게?
     // let cnt = 0;
     // solution -> hook state : useState()
+
+    const capacity = 10;
+
     let [cnt, setCnt] = useState(0); // => 0으로 초기화
+    let [full, setFull] = useState(false);
+    let [empty, setEmpty] = useState(false);
 
     const upCntHandler = (e) => {
         // cnt = cnt + 1;
@@ -35,6 +40,8 @@ const CapacityPage = () => {
     useEffect(() => {
         console.log(`debug >>>> CapcityPage life cycle mount, unmount`);
         console.log(`debug >>>> side effect render cnt : ${cnt}`);
+        setFull(cnt >= capacity);
+        setEmpty(cnt <= 0);
     });
     //UI
     /*
@@ -49,9 +56,11 @@ const CapacityPage = () => {
             <p>입장인원 : {cnt} </p>
             <Button title = "입장" 
                     //onClick = {upCntHandler} => 함수 호출시 매개변수 전달이 필요 없을때
-                    onClick = {(e) => upCntHandler()}/>
+                    onClick = {(e) => upCntHandler()}
+                    disabled = {full}/>
             <Button title = "퇴장" 
-                    onClick = {(e) => downCntHandler()}/>
+                    onClick = {(e) => downCntHandler()}
+                    disabled = {empty}/>
         </div>
 
     );

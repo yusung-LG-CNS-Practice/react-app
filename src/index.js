@@ -7,6 +7,7 @@ import LibraryPage from './pages/sample/LibraryPage';
 import ButtonPage from './pages/material/ButtonPage';
 import CommentPage from './pages/sample/CommentPage';
 import CapacityPage from './pages/reactive/CapacityPage';
+import EventPage from './pages/event/EventPage';
 
 // const root = ReactDOM.createRoot(document.getElementById('root'));
 // root.render(
@@ -33,10 +34,17 @@ import CapacityPage from './pages/reactive/CapacityPage';
 //     <CommentPage/>
 // );
 
+// const root = ReactDOM.createRoot(document.getElementById('root'));
+
+// root.render(
+//     <CapacityPage/>
+// );
+
+//import EventPage from './pages/event/EventPage';
 const root = ReactDOM.createRoot(document.getElementById('root'));
 
 root.render(
-    <CapacityPage/>
+    <EventPage/>
 );
 
 // If you want to start measuring performance in your app, pass a function
