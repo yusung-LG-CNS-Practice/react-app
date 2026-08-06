@@ -1,24 +1,16 @@
 {
-    "comment": [
-        {
-            "writer": "임정섭",
-            "comment": "강사님과 함께하는 즐거운 React..."
-        },
-        {
-            "writer": "차현준",
-            "comment": "강사님과 함께하는 재미없는 React..."
-        },
-        {
-            "writer": "박선아",
-            "comment": "강사님과 함께하는 즐겁지아니한 React..."
-        }
-    ],
-
-    "users":[
-        {
-            "email" : "yusung052077@gmail.com",
-            "pswd" : "1234",
-            "name" : "나유성"
-        }
-    ]
+  "users": [
+    {
+      "name": "나유성",
+      "email": "yusung052077@gmail.com",
+      "password": "1234",
+      "id": 1
+    },
+    {
+      "name": "나유성",
+      "email": "yusung052077@gmail.com",
+      "password": "1234",
+      "id": 2
+    }
+  ]
 }

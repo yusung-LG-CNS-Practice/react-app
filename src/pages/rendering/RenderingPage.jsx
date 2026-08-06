@@ -18,8 +18,7 @@ const RenderingPage = () => {
                 flag ? 
                     <LogoutButton isLogin = {setFlag}/>
                 :
-                    ''
-                    //<LoginButton isLogin = {setFlag}/>
+                    <LoginButton isLogin = {setFlag}/>
             }
         </div>
     );
