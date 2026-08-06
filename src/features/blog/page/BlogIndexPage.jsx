@@ -151,6 +151,7 @@ import Button from "../../../components/styled/Button";
 import BlogList from "../list/BlogList";
 import React, { useEffect, useState } from 'react';
 import api from '../../../api/axios';
+import { useNavigate } from "react-router-dom";
 
 const Wrapper = styled.div`
     padding: 16px;
@@ -293,11 +294,18 @@ const BlogIndexPage = () => {
                 (blog) => blog.category === selectedCategory
             );
 
+    const moveUrl = useNavigate();        
+    // handler
+    const writeHandler = (e) =>{
+        moveUrl('/blogs/write');
+    }
+
     return (
         <Wrapper>
             <Container>
                 {user && <WelcomeMessage>{user}님 환영합니다.</WelcomeMessage>}
-                <Button title='글 작성하기'></Button>
+                <Button title='글 작성하기'
+                        onClick = {(e) => writeHandler(e)}></Button>
                 &nbsp;&nbsp;&nbsp;
                 <Button title='로그아웃'></Button>
                 &nbsp;&nbsp;&nbsp; {/* 버튼 간 간격 띄우기 */}
