@@ -12,5 +12,19 @@
       "password": "1234",
       "id": 2
     }
+  ],
+  "blogs" : [
+    {
+            "title" : "til 작성",
+            "content" : "component",
+            "category" : "front-end",
+            "email" : "yusung052077@gmail.com"
+        },
+        {
+            "title" : "링거 (술)",
+            "content" : "java",
+            "category" : "back-end",
+            "email" : "yusung052077@naver.com"
+        }
   ]
 }
