@@ -5,26 +5,22 @@
       "email": "yusung052077@gmail.com",
       "password": "1234",
       "id": 1
-    },
-    {
-      "name": "나유성",
-      "email": "yusung052077@gmail.com",
-      "password": "1234",
-      "id": 2
     }
   ],
-  "blogs" : [
+  "blogs": [
     {
-            "title" : "til 작성",
-            "content" : "component",
-            "category" : "front-end",
-            "email" : "yusung052077@gmail.com"
-        },
-        {
-            "title" : "링거 (술)",
-            "content" : "java",
-            "category" : "back-end",
-            "email" : "yusung052077@naver.com"
-        }
+      "category": "개발",
+      "title": "234234",
+      "content": "23423424",
+      "email": "yusung052077@gmail.com",
+      "id": 1
+    },
+    {
+      "title": "재택근무",
+      "content": "재택근무는 좋습니다",
+      "category": "개발",
+      "email": "yusung052077@gmail.com",
+      "id": 2
+    }
   ]
 }

@@ -18,7 +18,7 @@ const TextInput = ({height, value, handler, disabled}) => {
     return (
         <StyledTextArea height = {height}
                         value={value}
-                        handler={handler}
+                        onChange={handler}
                         disabled={disabled}>
         </StyledTextArea>
     );

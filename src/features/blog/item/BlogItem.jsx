@@ -1,3 +1,4 @@
+import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 
 const Wrapper = styled.div`
@@ -21,10 +22,14 @@ const TitleText = styled.p`
     font-weight: bold ;
 `;
 
-const BlogItem = (props) => {
+const BlogItem = ({blog}) => {
+    const moveUrl = useNavigate();
     return (
-        <Wrapper>
-            <TitleText>{props.blog.title}</TitleText>
+        <Wrapper
+            onClick={() => {
+                moveUrl(`/blogs/read/${blog.id}`)
+            }}>
+            <TitleText>{blog.title}</TitleText>
         </Wrapper>
     );
 }
