@@ -149,7 +149,7 @@ title, content, email
 import styled from "styled-components";
 import Button from "../../../components/styled/Button";
 import BlogList from "../list/BlogList";
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import api from '../../../api/axios';
 import { useNavigate } from "react-router-dom";
 
@@ -260,6 +260,7 @@ const BlogIndexPage = () => {
     - 데이터를 reactive state 관리(setxxxx)
     - 랜더링 시점에 데이터 바인딩이 안됨, 그래서 effect이 필요함
     */
+   
     const loadData = async () => {
         // json-server version
         await api.get('/blogs')
@@ -287,16 +288,24 @@ const BlogIndexPage = () => {
     // 선택된 카테고리에 따라 blogs 필터링
     const [selectedCategory, setSelectedCategory] = useState("전체");
 
-    const filteredBlogs =
-        selectedCategory === "전체"
-            ? blogs
-            : blogs.filter(
-                (blog) => blog.category === selectedCategory
-            );
+    // case 01
+    // const filteredBlogs =
+    //     selectedCategory === "전체"
+    //         ? blogs
+    //         : blogs.filter(
+    //             (blog) => blog.category === selectedCategory
+    //         );
 
-    const moveUrl = useNavigate();        
+    // case 02 : useMemo() - 성능개선을 위해서 사용함(대용량 데이터 처리를 위해 사용)
+    const filteredBlogs = useMemo(() => {
+        return selectedCategory === "전체"
+            ? blogs
+            : blogs.filter((blog) => blog.category === selectedCategory)
+    }, [blogs, selectedCategory])
+
+    const moveUrl = useNavigate();
     // handler
-    const writeHandler = (e) =>{
+    const writeHandler = (e) => {
         moveUrl('/blogs/write');
     }
 
@@ -305,7 +314,7 @@ const BlogIndexPage = () => {
             <Container>
                 {user && <WelcomeMessage>{user}님 환영합니다.</WelcomeMessage>}
                 <Button title='글 작성하기'
-                        onClick = {(e) => writeHandler(e)}></Button>
+                    onClick={(e) => writeHandler(e)}></Button>
                 &nbsp;&nbsp;&nbsp;
                 <Button title='로그아웃'></Button>
                 &nbsp;&nbsp;&nbsp; {/* 버튼 간 간격 띄우기 */}
@@ -322,7 +331,7 @@ const BlogIndexPage = () => {
                     ))}
                 </CategoryRow>
 
-                <BlogList ary={blogs || []}></BlogList>
+                <BlogList ary={filteredBlogs || []}></BlogList>
             </Container>
         </Wrapper>
     );

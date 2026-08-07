@@ -5,6 +5,12 @@
       "email": "yusung052077@gmail.com",
       "password": "1234",
       "id": 1
+    },
+    {
+      "name": "나유성",
+      "email": "yusung052077@naver.com",
+      "password": "1234",
+      "id": 2
     }
   ],
   "blogs": [
@@ -21,6 +27,40 @@
       "category": "개발",
       "email": "yusung052077@gmail.com",
       "id": 2
+    },
+    {
+      "title": "react",
+      "content": "react",
+      "category": "취미",
+      "email": "yusung052077@gmail.com",
+      "id": 3
+    },
+    {
+      "title": "골프",
+      "content": "골프",
+      "category": "취미",
+      "email": "yusung052077@gmail.com",
+      "id": 4
+    }
+  ],
+  "comments": [
+    {
+      "blogId": 1,
+      "comment": "수고하셨습니다.",
+      "email": "yusung052077@gmail.com",
+      "id": 6
+    },
+    {
+      "blogId": 1,
+      "comment": "불금 마무리",
+      "email": "yusung052077@gmail.com",
+      "id": 7
+    },
+    {
+      "blogId": 1,
+      "comment": "ddd",
+      "email": "yusung052077@gmail.com",
+      "id": 8
     }
   ]
 }

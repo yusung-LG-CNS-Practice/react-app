@@ -1,7 +1,10 @@
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import styled, { keyframes } from "styled-components";
 import { useEffect, useState } from "react";
 import api from "../../../api/axios";
+import Button from "../../../components/styled/Button";
+import TextInput from "../../../components/styled/TextInput";
+import BlogCommentList from "../list/BlogCommentList";
 
 const Wrapper = styled.div`
     padding: 16px;
@@ -70,7 +73,12 @@ const WelcomeMessage = styled.div`
 const BlogReadPage = () => {
     const { blogId } = useParams();
     const user = localStorage.getItem('user');
-    const [blog, setBlog] = useState({});
+    const [blog, setBlog] = useState({}); // 블로그 정보
+    const [comments, setComments] = useState({}); //댓글을 담는 배열
+    const [comment, setComment] = useState(''); // 댓글 입력
+
+    // navigate
+    const moveUrl = useNavigate();
 
     console.log(`debug >>>> BlogReadPage rendering ${blogId}, ${user}`)
 
@@ -109,25 +117,93 @@ const BlogReadPage = () => {
         - sql : select * from table where id = ? ; ->필터링
         */
 
+        // const id = blogId
+        // await api.get(`/blogs/${id}`) //서버 통신 엔드 포인트
+        //     .then(response => {
+        //         console.log('debug >>> axios request success', response);
+        //         if (response.status === 200) {
+        //             setBlog(response.data);
+        //         }
+        //     })
+        //     .catch(error => {
+        //         console.log('debug >>> axios request error', error);
+        //     })
+
+        // json-server : 댓글이 있는 상황
+        // - 1:N 관계
+        // - axios - get(blogs/&{}?_embed=comments)
         const id = blogId
-        await api.get(`/blogs/${id}`) //서버 통신 엔드 포인트
+        await api.get(`/blogs/${id}?_embed=comments`) //서버 통신 엔드 포인트
             .then(response => {
                 console.log('debug >>> axios request success', response);
                 if (response.status === 200) {
                     setBlog(response.data);
+
+                    // 댓글정보 배열에 담아본다면? -> reactive state
+                    setComments(response.data.comments);
                 }
             })
             .catch(error => {
                 console.log('debug >>> axios request error', error);
             })
-
-        // json-server : 댓글이 있는 상황
-        // - 1:N 관계
-        // - axios - get(blogs/&{}?_embed=comments)
     }
     useEffect(() => {
         loadData();
     }, []);
+
+    // comment handler
+    const commentHandler = async (e) => {
+        /*
+        Q)
+        - data - (comment, blogId, email)
+        - axios post(url, data)
+        - status 201(created)
+        - 부분 리렌더링을 위한 작업(comments - 배열) -> 댓글 부분만 리렌더링을 해야함.
+        */
+        console.log('debug >>> commentHandler event');
+        let email = user;
+        await api.post('/comments', { blogId: Number(blogId), comment, email })
+            .then(response => {
+
+                console.log('debug >>> axios request success', response);
+
+                if (response.status === 201) {
+                    // setComments(ary => [...ary, response.data]);
+                    setComments(ary => {
+                        return [...ary, response.data]
+                    }); // => 이렇게 하면 리턴을 반드시 해줘야함.
+                    setComment('');
+                }
+            })
+            .catch(error => {
+                console.log('debug >>> axios request error', error);
+            })
+    };
+
+    // comment delete handelr, props로 전달
+    const commentDeleteHandler = async (e, id) => {
+        console.log(`debug >>>> commentDeleteHandler event`);
+        console.log(`debug >>>> commentDeleteHandler comment id ${id}`);
+        /*
+        Q)
+        - axios delete('/comments/${id}'), status 204(NO_CONTENT) => axios의 delete를 이용해서 삭제, 이것도 부분 리렌더링
+        - 삭제될 comment id만 필터링해서 re-rendering
+        */
+        await api.delete(`/comments/${id}`)
+            .then(response => {
+
+                console.log('debug >>> axios request success', response);
+
+                if (response.status === 200) {
+                    setComments(comments.filter((c)=>{
+                        return c.id !== id
+                    }));
+                }
+            })
+            .catch(error => {
+                console.log('debug >>> axios request error', error);
+            })
+    }
 
 
     return (
@@ -142,6 +218,38 @@ const BlogReadPage = () => {
                         <TitleText>{blog.title}</TitleText>
                         <ContentText>{blog.content}</ContentText>
                     </PostContainer> */}
+
+                    {/* 강사님 코드 */}
+                    <Button title='메인페이지'
+                        onClick={() => {
+                            moveUrl('/blogs/index');
+                        }}></Button>
+
+                    {/* blog title, content, category */}
+                    <PostContainer>
+                        <TitleText>{blog.title}</TitleText>
+                        <ContentText>{blog.content}</ContentText>
+                    </PostContainer>
+
+                    {/* 댓글 UI 설계 - BlogCommentList, BlogCommentItem */}
+                    <CommentLabel>작성된 댓글 목록</CommentLabel>
+
+                    {/* BlogCommentList */}
+                    <BlogCommentList
+                        comments={comments || []}
+                        handler={commentDeleteHandler}>
+                    </BlogCommentList>
+
+                    {/* 댓글 입력과 이벤트 */}
+                    <TextInput height={14}
+                        value={comment}
+                        handler={(e) => {
+                            setComment(e.target.value);
+                        }}>
+                    </TextInput>
+                    <Button title='댓글 작성'
+                        onClick={commentHandler}>
+                    </Button>
                 </Container>
             }
         </Wrapper>
