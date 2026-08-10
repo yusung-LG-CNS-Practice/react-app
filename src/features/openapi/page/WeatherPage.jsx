@@ -139,7 +139,7 @@
 
 
 
-
+// 퀴즈 이후 카카오맵 연동 실습 코드
 // 카카오맵 버전 
 import { useEffect, useState } from "react";
 import '../css/weather.css';
@@ -153,7 +153,7 @@ const WeatherPage = () => {
 
     // console.log(`debug >>>> open api key `, key);
 
-    const cities = ["Seoul, KR", "Busan, KR", "Daejeon, KR", "Incheon, KR", "Paris", "New York"];
+    const cities = ["서울", "부산", "대전", "인천", "대구", "광주"]; // 광주는 전라도랑 경기도 두개가 있어서 전라도 광주를 원하면 전남 광주로 해야됨.
 
     const [city, setCity] = useState('');
     const [weather, setWeather] = useState({});
@@ -162,6 +162,9 @@ const WeatherPage = () => {
     const cityHandler = (e, city) => {
         console.log(`debug >>>> cityHandler city ${city}`);
         setCity(city)
+
+        // 기존 api 대신 좌표값 기반으로 변경
+        getCoordsByCity(city);
     }
 
     // 도시버튼 이벤트 발생시
@@ -172,29 +175,6 @@ const WeatherPage = () => {
             getCityWeather();
         }
     }, [city])
-
-    // 1번 퀴즈에 대한 내 코드
-    // const getCityWeather = async () => {
-
-    //     console.log(`debug >>>> getCityWeather city ${city}`);
-
-    //     const endPoint =
-    //         `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${key}`;
-
-    //     await fetch(endPoint)
-    //         .then(response => {
-    //             console.log(`debug >>>> city weather response`, response);
-    //             return response.json();
-    //         })
-    //         .then(data => {
-    //             console.log(`debug >>>> city weather data`, data);
-
-    //             setWeather(data);
-    //         })
-    //         .catch(error => {
-    //             console.log(`debug >>>> city weather error`, error);
-    //         });
-    // }
 
     const getCityWeather = async () => {
         console.log(`debug >>>> getCityWeather city ${city}`);
@@ -266,16 +246,52 @@ const WeatherPage = () => {
         getCurrnetLocation();
     }, [])
 
-    ////////////// map
+    ////////////// map, 도시 클릭시 좌표 얻기(kakao goecoder)
+    const [moveTo, setMoveTo] = useState(null);
 
-    
-    /////////////
+    const getWeatherByCoords = async (lat, lng) => {
+        console.log(`debug >>>> getWeatherByCoords lat, lon : ${lat}, ${lng} `);
+        let endPoint = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lng}&appid=${key}`;
+        await fetch(endPoint)
+            .then(response => {
+                console.log(`debug >>>> fetch response `, response);
+                return response.json();
+            })
+            .then(data => {
+                console.log(`debug >>>> fetch response data `, data);
+                setWeather(data);
+            })
+            .catch(error => {
+                console.log(`debug >>>> fetch error `, error);
+            });
+    };
+
+    ///////////// 좌표 변환 함수
+    const getCoordsByCity = (cityName) => {
+        console.log(`debug >>>> city name`, cityName)
+        const geocoder = new window.kakao.maps.services.Geocoder();
+        geocoder.addressSearch(cityName, (result, status) => {
+            console.log(`debug >>>> getCoordsByCity status`, status);
+            console.log(`debug >>>> getCoordsByCity rusult`, result);
+            console.log(`debug >>>> getCoordsByCity status ok`, window.kakao.maps.services.Status.OK);
+            if (status === window.kakao.maps.services.Status.OK) {
+                const lat = parseFloat(result[0].y);
+                const lng = parseFloat(result[0].x);
+                setMoveTo({ lat: lat, lng: lng, time: Date.now() })
+                getWeatherByCoords(lat, lng);
+            } else {
+                console.log(`debug >>>> getCoordsByCity 좌표변환 실패`);
+            }
+        });
+    }
+
 
     //UI Templete
     return (
         <div className="container">
-            {/* kakao map version add */}
-            <KakaoMap></KakaoMap>
+            {/* kakao map version add : coords(좌표 - 위(lat)/경도(lon)) */}
+            <KakaoMap setWeatherByCoords={getWeatherByCoords}
+                moveTo={moveTo}></KakaoMap>
 
 
             {/* api.openweathermap.org */}
