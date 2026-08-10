@@ -260,7 +260,7 @@ const BlogIndexPage = () => {
     - 데이터를 reactive state 관리(setxxxx)
     - 랜더링 시점에 데이터 바인딩이 안됨, 그래서 effect이 필요함
     */
-   
+
     const loadData = async () => {
         // json-server version
         await api.get('/blogs')
@@ -316,9 +316,17 @@ const BlogIndexPage = () => {
                 <Button title='글 작성하기'
                     onClick={(e) => writeHandler(e)}></Button>
                 &nbsp;&nbsp;&nbsp;
-                <Button title='로그아웃'></Button>
+                <Button title='로그아웃'
+                    onClick={(e) => {
+                        moveUrl("/");
+                    }}></Button>
                 &nbsp;&nbsp;&nbsp; {/* 버튼 간 간격 띄우기 */}
                 <Button title='기상예보'></Button>
+                &nbsp;&nbsp;&nbsp;
+                <Button title='Openapi'
+                    onClick={(e) => {
+                        moveUrl('/openapi/index')
+                    }}></Button>
 
                 <CategoryRow>
                     {CATEGORIES.map((category) => (

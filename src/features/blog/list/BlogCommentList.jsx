@@ -10,14 +10,15 @@ const Wrapper = styled.div`
     gap: 16px;
 `;
 
-const BlogCommentList = ({ comments, handler }) => {
+const BlogCommentList = ({ comments, handler, updateHandler }) => {
     return (
         <Wrapper>
             {
                 comments.map((comment, idx) => {
                     return <BlogCommentItem key={idx}
                         comment={comment}
-                        handler={handler}>
+                        handler={handler}
+                        updateHandler = {updateHandler}>
                     </BlogCommentItem>
                 })
             }
