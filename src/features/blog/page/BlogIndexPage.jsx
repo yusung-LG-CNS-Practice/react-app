@@ -231,9 +231,10 @@ const CategoryChip = styled.button`
 // blog property - title, content, category, email(pk)
 const BlogIndexPage = () => {
 
-    const user = localStorage.getItem('user');
-
     const CATEGORIES = ["전체", "개발", "생활", "취미", "일상"];
+
+    const user = localStorage.getItem('user');
+    const at = localStorage.getItem('at');
 
     // const blogs = [];
 
@@ -263,27 +264,41 @@ const BlogIndexPage = () => {
 
     const loadData = async () => {
         // json-server version
-        await api.get('/blogs')
-            .then(response => {
-                console.log(
-                    `debug >>>> axios request success`,
-                    response
-                );
+        // await api.get('/blogs/index')
+        //     .then(response => {
+        //         console.log(
+        //             `debug >>>> axios request success`,
+        //             response
+        //         );
 
+        //         if (response.status === 200) {
+        //             setBlogs(response.data);
+        //         }
+        //     })
+        //     .catch(error => {
+        //         console.log(
+        //             `debug >>>> axios request error`,
+        //             error
+        //         );
+        //     });
+        await api.get('/blogs/index', {
+            headers: {
+                Authorization: at ? at : ""
+            }
+        })
+            .then(response => {
+                console.log(`debug >>>> axios request success`, response);
                 if (response.status === 200) {
                     setBlogs(response.data);
                 }
             })
             .catch(error => {
-                console.log(
-                    `debug >>>> axios request error`,
-                    error
-                );
+                console.log(`debug >>>> axios request error`, error);
             });
-    };
+    }
     useEffect(() => {
         loadData();
-    }, [])
+    }, []);
 
     // 선택된 카테고리에 따라 blogs 필터링
     const [selectedCategory, setSelectedCategory] = useState("전체");
@@ -309,6 +324,23 @@ const BlogIndexPage = () => {
         moveUrl('/blogs/write');
     }
 
+    const logoutHandler = async (e) => {
+
+        await api.post(`/users/signOut`, null, {
+            headers: { Authorization: at ? at : "" }
+        })
+            .then(response => {
+                console.log(`debug >>>> axios request success`, response);
+                if (response.status === 204) {
+                    moveUrl('/');
+                }
+            })
+            .catch(error => {
+                console.log(`debug >>>> axios request error`, error);
+            });
+
+    };
+
     return (
         <Wrapper>
             <Container>
@@ -317,9 +349,7 @@ const BlogIndexPage = () => {
                     onClick={(e) => writeHandler(e)}></Button>
                 &nbsp;&nbsp;&nbsp;
                 <Button title='로그아웃'
-                    onClick={(e) => {
-                        moveUrl("/");
-                    }}></Button>
+                    onClick={(e) => logoutHandler(e)}></Button>
                 &nbsp;&nbsp;&nbsp; {/* 버튼 간 간격 띄우기 */}
                 <Button title='기상예보'></Button>
                 &nbsp;&nbsp;&nbsp;

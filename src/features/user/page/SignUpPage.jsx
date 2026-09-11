@@ -224,158 +224,182 @@ const TextLink = styled(Link)`
   }
 `;
 
+// validation error message
 const ErrorMessage = styled.p`
-  margin: 10px 0 0;
+  margin: 2px 0 0 2px;
   color: red;
-  font-size: 14px;
-  text-align: center;
+  font-size: 13px;
 `;
+
 
 const SignUpPage = () => {
 
-    const [form, setForm] = useState({
-        name: '',
-        email: '',
-        password: ''
-    });
+  const [form, setForm] = useState({
+    name: '',
+    email: '',
+    password: ''
+  });
 
-    //기존값을 유지하면서 현재 입력된 필드에 대한 상태변화(업데이트)를 처리
-    const keyHandler = (e) => {
-        const { name, value } = e.target;
-        setForm({ ...form, [name]: value });
-    }
+  const [errors, setErrors] = useState({
+    name: '',
+    email: '',
+    password: ''
+  });
 
-    const moveUrl = useNavigate();
+  //기존값을 유지하면서 현재 입력된 필드에 대한 상태변화(업데이트)를 처리
+  const keyHandler = (e) => {
+    const { name, value } = e.target;
+    setForm({ ...form, [name]: value });
+  }
 
-    const signUpHandler = async(e) => {
-        e.preventDefault();
-        console.log(`debug >>>> SignUpPage signUpHandler event`);
-        // const data = {
-        //     name : form.name,
-        //     email : form.email,
-        //     password : form.password
-        // }
-        const data = {...form};
-        /*
-        Q)
-        - axios(/users) 통신을 통해서 json-server 데이터를 전달하고 저장
-        - post, get, put-patch, delete 방식중 post방식을 사용
-        - 가입 성공시(200) - SignInPage로 이동
-        - 가입 실패 (400번대) - 현재 페이지에 에러메시지를 출력
-        */
+  const moveUrl = useNavigate();
 
-        // json-server version
-        // 강사님 하신 퀴즈 코드
-        await api.post('/users', data)
-                .then(response => {
-                    console.log(`debug >>>> axios request success`, response)
-                    if(response.status === 201){
-                        moveUrl('/users/signIn');
-                    }
-                })
-                .catch(error =>{
-                    console.log(`debug >>>> axios request error`, error)
-                })
-    }
+  const signUpHandler = async (e) => {
+    e.preventDefault();
+    console.log(`debug >>>> SignUpPage signUpHandler event`);
+    // const data = {
+    //     name : form.name,
+    //     email : form.email,
+    //     password : form.password
+    // }
+    const data = { ...form };
+    /*
+    Q)
+    - axios(/users) 통신을 통해서 json-server 데이터를 전달하고 저장
+    - post, get, put-patch, delete 방식중 post방식을 사용
+    - 가입 성공시(200) - SignInPage로 이동
+    - 가입 실패 (400번대) - 현재 페이지에 에러메시지를 출력
+    */
 
-    // 내가 한 퀴즈 코드 
-
-    // const signUpHandler = async (e) => {
-    //     e.preventDefault();
-
-    //     console.log('debug >>>> SignUpPage signUpHandler event');
-
-    //     // 이전 에러 메시지 초기화
-    //     setErrorMessage('');
-
-    //     // 간단한 입력값 검사
-    //     if (
-    //         form.name.trim() === '' ||
-    //         form.email.trim() === '' ||
-    //         form.password.trim() === ''
-    //     ) {
-    //         setErrorMessage('모든 항목을 입력해주세요.');
-    //         return;
-    //     }
-
-    //     const data = {
-    //         ...form
-    //     };
-
-    //     try {
-    //         setIsLoading(true);
-
-    //         // json-server의 users 데이터에 회원 정보 저장
-    //         const response = await axios.post('/users', data);
-
-    //         console.log('회원가입 성공:', response);
-    //         console.log('저장된 회원 정보:', response.data);
-
-    //         // 200번대 응답이면 로그인 페이지로 이동
-    //         if (response.status >= 200 && response.status < 300) {
-    //             navigate('/users/signIn');
-    //         }
-
-    //     } catch (error) {
-    //         console.error('회원가입 실패:', error);
-
-    //         // 서버에서 응답은 왔지만 400번대 또는 500번대인 경우
-    //         if (error.response) {
-    //             const status = error.response.status;
-
-    //             if (status >= 400 && status < 500) {
-    //                 setErrorMessage(
-    //                     `회원가입 요청이 올바르지 않습니다. (${status})`
-    //                 );
-    //             } else {
-    //                 setErrorMessage(
-    //                     `서버에서 오류가 발생했습니다. (${status})`
-    //                 );
+    // json-server version
+    // 강사님 하신 퀴즈 코드
+    // await api.post('/users', data)
+    //         .then(response => {
+    //             console.log(`debug >>>> axios request success`, response)
+    //             if(response.status === 201){
+    //                 moveUrl('/users/signIn');
     //             }
+    //         })
+    //         .catch(error =>{
+    //             console.log(`debug >>>> axios request error`, error)
+    //         })
 
-    //             // 서버가 실행되지 않았거나 연결할 수 없는 경우
-    //         } else if (error.request) {
-    //             setErrorMessage(
-    //                 '서버에 연결할 수 없습니다. json-server를 확인해주세요.'
-    //             );
+    // spring boot version
+    await api.post('/users/signUp', data)
+      .then(response => {
+        console.log(`debug >>>> axios request success`, response)
+        if (response.status === 201) {
+          moveUrl('/users/signIn');
+        }
+      })
+      .catch(error => {
+        console.log(`debug >>>> axios request error`, error);
+        console.log(`debug >>>> axios request error`, error.response.data);
+        setErrors(error.response.data);
+      })
+  }
 
-    //             // 요청을 만드는 과정에서 오류가 난 경우
-    //         } else {
-    //             setErrorMessage('회원가입 처리 중 오류가 발생했습니다.');
-    //         }
+  // 내가 한 퀴즈 코드 
 
-    //     } finally {
-    //         setIsLoading(false);
-    //     }
-    // };
+  // const signUpHandler = async (e) => {
+  //     e.preventDefault();
+
+  //     console.log('debug >>>> SignUpPage signUpHandler event');
+
+  //     // 이전 에러 메시지 초기화
+  //     setErrorMessage('');
+
+  //     // 간단한 입력값 검사
+  //     if (
+  //         form.name.trim() === '' ||
+  //         form.email.trim() === '' ||
+  //         form.password.trim() === ''
+  //     ) {
+  //         setErrorMessage('모든 항목을 입력해주세요.');
+  //         return;
+  //     }
+
+  //     const data = {
+  //         ...form
+  //     };
+
+  //     try {
+  //         setIsLoading(true);
+
+  //         // json-server의 users 데이터에 회원 정보 저장
+  //         const response = await axios.post('/users', data);
+
+  //         console.log('회원가입 성공:', response);
+  //         console.log('저장된 회원 정보:', response.data);
+
+  //         // 200번대 응답이면 로그인 페이지로 이동
+  //         if (response.status >= 200 && response.status < 300) {
+  //             navigate('/users/signIn');
+  //         }
+
+  //     } catch (error) {
+  //         console.error('회원가입 실패:', error);
+
+  //         // 서버에서 응답은 왔지만 400번대 또는 500번대인 경우
+  //         if (error.response) {
+  //             const status = error.response.status;
+
+  //             if (status >= 400 && status < 500) {
+  //                 setErrorMessage(
+  //                     `회원가입 요청이 올바르지 않습니다. (${status})`
+  //                 );
+  //             } else {
+  //                 setErrorMessage(
+  //                     `서버에서 오류가 발생했습니다. (${status})`
+  //                 );
+  //             }
+
+  //             // 서버가 실행되지 않았거나 연결할 수 없는 경우
+  //         } else if (error.request) {
+  //             setErrorMessage(
+  //                 '서버에 연결할 수 없습니다. json-server를 확인해주세요.'
+  //             );
+
+  //             // 요청을 만드는 과정에서 오류가 난 경우
+  //         } else {
+  //             setErrorMessage('회원가입 처리 중 오류가 발생했습니다.');
+  //         }
+
+  //     } finally {
+  //         setIsLoading(false);
+  //     }
+  // };
 
 
-    return (
-        <Container>
-            <FormWrapper>
-                <Title>회원가입</Title>
-                <form onSubmit={signUpHandler}>
-                    <Input type='text'
-                        name='name'
-                        placeholder="이름 입력하세요"
-                        value={form.name}
-                        onChange={keyHandler} />
-                    <Input type='email'
-                        name='email'
-                        placeholder="이메일 입력하세요"
-                        value={form.email}
-                        onChange={keyHandler} />
-                    <Input type='password'
-                        name='password'
-                        placeholder="패스워드 입력하세요"
-                        value={form.password}
-                        onChange={keyHandler} />
-                    <Button type='submit'>가입하기</Button>
-                </form>
-                <TextLink to='/users/signIn'>이미회원이시면 로그인</TextLink>
-            </FormWrapper>
-        </Container>
-    )
+  return (
+    <Container>
+      <FormWrapper>
+        <Title>회원가입</Title>
+        <form onSubmit={signUpHandler}>
+          <Input type='text'
+            name='name'
+            placeholder="이름 입력하세요"
+            value={form.name}
+            onChange={keyHandler} />
+          {errors.name && <ErrorMessage>{errors.name}</ErrorMessage>}
+          <Input type='email'
+            name='email'
+            placeholder="이메일 입력하세요"
+            value={form.email}
+            onChange={keyHandler} />
+          {errors.email && <ErrorMessage>{errors.email}</ErrorMessage>}  
+          <Input type='password'
+            name='password'
+            placeholder="패스워드 입력하세요"
+            value={form.password}
+            onChange={keyHandler} />
+          {errors.password && <ErrorMessage>{errors.password}</ErrorMessage>}
+          <Button type='submit'>가입하기</Button>
+        </form>
+        <TextLink to='/users/signIn'>이미회원이시면 로그인</TextLink>
+      </FormWrapper>
+    </Container>
+  )
 }
 
 export default SignUpPage;

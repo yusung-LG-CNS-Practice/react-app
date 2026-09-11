@@ -25,7 +25,7 @@ const ToyApp = () => {
                 
                 {/* open api */}
                 <Route path = "/openapi/index" element = {<WeatherPage/>}></Route>
-
+ 
             </Routes>
         </BrowserRouter>
     );

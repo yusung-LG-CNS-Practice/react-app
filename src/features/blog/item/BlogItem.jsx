@@ -41,7 +41,7 @@ const BlogItem = ({blog}) => {
     return (
         <Wrapper
             onClick={() => {
-                moveUrl(`/blogs/read/${blog.id}`)
+                moveUrl(`/blogs/read/${blog.blogId}`)
             }}>
             {blog.category && <CategoryBadge>{blog.category}</CategoryBadge>}
             <TitleText>{blog.title}</TitleText>

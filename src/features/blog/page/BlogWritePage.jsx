@@ -86,6 +86,7 @@ const CategoryChip = styled.button`
 const BlogWritePage = () => {
 
     const user = localStorage.getItem('user');
+    const at = localStorage.getItem('at');
     const CATEGORIES = ["개발", "생활", "취미", "일상"];
     const [selectedCategory, setSelectedCategory] = useState("");
 
@@ -127,11 +128,17 @@ const BlogWritePage = () => {
         //     });
 
 
-        await api.post('/blogs', {
-            title: title,
-            content: content,
+        // json server version
+        // await api.post('/blogs', {
+
+        // spring boot version
+        await api.post('/blogs/insert', {
+            title,
+            content,
             category: selectedCategory,
             email: user
+        }, {
+            headers: { Authorization: at ? at : "" }
         })
             .then(response => {
                 console.log('debug >>> axios request success', response);

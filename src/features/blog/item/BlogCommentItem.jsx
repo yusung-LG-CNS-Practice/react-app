@@ -52,7 +52,7 @@ const BlogCommentItem = ({ comment, handler, updateHandler }) => {
             */
 
             // 수정완료모드 ON
-            updateHandler(comment.id, mention); // read page : commentUpdateHandler();
+            updateHandler(comment.commentId, mention); // read page : commentUpdateHandler();
             setIsEdit(false);
         }
     }
@@ -69,7 +69,7 @@ const BlogCommentItem = ({ comment, handler, updateHandler }) => {
                 user === comment.email &&
                 <div>
                     <Button title='삭제'
-                        onClick={(e) => handler(e, comment.id)}></Button>
+                        onClick={(e) => handler(e, comment.commentId)}></Button>
                     <Button title={isEdit ? '수정완료' : '수정'}
                         onClick={(e) => updateMentionHandler(e)}></Button>
                 </div>

@@ -72,9 +72,14 @@ const WelcomeMessage = styled.div`
 
 const BlogReadPage = () => {
     const { blogId } = useParams();
+
     const user = localStorage.getItem('user');
+    const at = localStorage.getItem('at');
+
+    console.log(`debug >>>> BlogReadPage rendering ${blogId}, ${user}, ${at}`);
+
     const [blog, setBlog] = useState({}); // 블로그 정보
-    const [comments, setComments] = useState({}); //댓글을 담는 배열
+    const [comments, setComments] = useState([]); //댓글을 담는 배열
     const [comment, setComment] = useState(''); // 댓글 입력
 
     // navigate
@@ -133,7 +138,12 @@ const BlogReadPage = () => {
         // - 1:N 관계
         // - axios - get(blogs/&{}?_embed=comments)
         const id = blogId
-        await api.get(`/blogs/${id}?_embed=comments`) //서버 통신 엔드 포인트
+        // await api.get(`/blogs/${id}?_embed=comments`) //서버 통신 엔드 포인트
+
+        // spring boot version
+        await api.get(`/blogs/read/${id}`, {
+            headers: { Authorization: at ? at : "" }
+        })
             .then(response => {
                 console.log('debug >>> axios request success', response);
                 if (response.status === 200) {
@@ -162,7 +172,13 @@ const BlogReadPage = () => {
         */
         console.log('debug >>> commentHandler event');
         let email = user;
-        await api.post('/comments', { blogId: Number(blogId), comment, email })
+
+        // await api.post('/comments', { blogId: Number(blogId), comment, email })
+
+        // spring boot version
+        await api.post('/comments/insert', { blogId: Number(blogId), comment, email }, {
+            headers: { Authorization: at ? at : "" }
+        })
             .then(response => {
 
                 console.log('debug >>> axios request success', response);
@@ -189,14 +205,18 @@ const BlogReadPage = () => {
         - axios delete('/comments/${id}'), status 204(NO_CONTENT) => axios의 delete를 이용해서 삭제, 이것도 부분 리렌더링
         - 삭제될 comment id만 필터링해서 re-rendering
         */
-        await api.delete(`/comments/${id}`)
-            .then(response => {
+        // await api.delete(`/comments/${id}`)
 
+        /// spring boot version
+        await api.delete(`/comments/delete/${id}`, {
+            headers: { Authorization: at ? at : "" }
+        })
+            .then(response => {
                 console.log('debug >>> axios request success', response);
 
-                if (response.status === 200) {
+                if (response.status === 204) {
                     setComments(comments.filter((c) => {
-                        return c.id !== id
+                        return c.commentId !== id
                     }));
                 }
             })
@@ -211,16 +231,26 @@ const BlogReadPage = () => {
         console.log(`debug >>> commentUPdateHandler id ${id}, mention ${mention}`);
 
         // update : axios put(전체 교체), patch(부분수정)
-        await api.patch(`/comments/${id}`, {
-            comment: mention
-        })
+        // await api.patch(`/comments/${id}`, {
+
+        // spring boot version
+        // await api.patch(`comments/update/${id}`, {
+        //     comment: mention
+        // }, {
+        //     headers: { Authorization: at ? at : "" }
+        // })
+
+        await api.patch(`comments/update/${id}/${encodeURIComponent(mention)}`, null,
+            {
+                headers: { Authorization: at ? at : "" }
+            })
             .then(response => {
                 console.log('debug >>> axios request success', response);
 
-                if (response.status === 200) {
-                    setComments( ary => {
+                if (response.status === 204) {
+                    setComments(ary => {
                         return ary.map(comment => {
-                            return comment.id === id ? {...comment, comment : mention} : comment
+                            return comment.id === id ? { ...comment, comment: mention } : comment
                         })
                     })
                 }
@@ -234,8 +264,8 @@ const BlogReadPage = () => {
 
     return (
         <Wrapper>
-            {!blog.id && <Spinner></Spinner>}
-            {blog.id &&
+            {!blog.blogId && <Spinner></Spinner>}
+            {blog.blogId &&
                 <Container>
                     {user && <WelcomeMessage>{user}님 환영합니다.</WelcomeMessage>}
 
