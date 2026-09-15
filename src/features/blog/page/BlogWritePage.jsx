@@ -88,13 +88,15 @@ const BlogWritePage = () => {
     const user = localStorage.getItem('user');
     const at = localStorage.getItem('at');
     const CATEGORIES = ["개발", "생활", "취미", "일상"];
-    const [selectedCategory, setSelectedCategory] = useState("");
 
     const moveUrl = useNavigate();
 
     // state
     const [title, setTitle] = useState('');
     const [content, setContent] = useState('');
+    const [selectedCategory, setSelectedCategory] = useState("");
+
+    const [keyword, setKeyword] = useState('');
 
     // handler
     const writeHandler = async () => {
@@ -152,6 +154,26 @@ const BlogWritePage = () => {
 
     };
 
+    // open ai - agent, mcp
+    const keywordHandler = async() => {
+        console.log(`debug >>>> keyword : %{keyword}`);
+        await api.post('/blogs/ai/agent', {
+            keyword,
+            category : selectedCategory
+        }, {
+            headers: { Authorization: at ? at : "" }
+        })
+            .then(response => {
+                console.log('debug >>> axios request success', response);
+                if (response.status === 201) {
+                    setContent(response.data);
+                }
+            })
+            .catch(error => {
+                console.log('debug >>> axios request error', error);
+            });
+    }
+
     return (
         <Wrapper>
             <Container>
@@ -186,6 +208,19 @@ const BlogWritePage = () => {
                     handler={(e) => {
                         setTitle(e.target.value);
                     }}></TextInput>
+
+                {/* -------------------- open ai ---------------------*/}
+                <TextInput
+                    height={20}
+                    value={keyword}
+                    placeholder="키워드를 입력하세요"
+                    handler={(e) => {
+                        setKeyword(e.target.value);
+                    }}
+                />
+                <Button title= '키워드 전송'
+                        onClick={keywordHandler}/>
+                {/* --------------------------------------------------*/}
 
                 {/* content */}
                 <TextInput height={280}
