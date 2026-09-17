@@ -341,6 +341,10 @@ const BlogIndexPage = () => {
 
     };
 
+    const forcastHandler = (e) => {
+        moveUrl("/forcast/index")
+    }
+
     return (
         <Wrapper>
             <Container>
@@ -351,7 +355,8 @@ const BlogIndexPage = () => {
                 <Button title='로그아웃'
                     onClick={(e) => logoutHandler(e)}></Button>
                 &nbsp;&nbsp;&nbsp; {/* 버튼 간 간격 띄우기 */}
-                <Button title='기상예보'></Button>
+                <Button title='기상예보'
+                        onClick={(e) => forcastHandler(e)}></Button>
                 &nbsp;&nbsp;&nbsp;
                 <Button title='Openapi'
                     onClick={(e) => {
